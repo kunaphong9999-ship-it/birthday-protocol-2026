@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday! 🎂💖 - Special Birthday Surprise</title>
+  <meta name="description" content="A special birthday surprise web application crafted with love and code." />
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Canvas Confetti Library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
+
+  <!-- CSS Styles -->
+  <link rel="stylesheet" href="./src/style.css" />
+</head>
+<body>
+  <!-- Canvas for Ambient Background Particles -->
+  <canvas id="ambient-canvas"></canvas>
+
+  <!-- Audio BGM Player -->
+  <audio id="bgm-player" loop preload="auto"></audio>
+
+  <!-- Navigation Bar & Controls -->
+  <header class="app-header">
+    <div class="logo">
+      <span class="logo-icon">🎂</span>
+      <span class="logo-text">HBD Special</span>
+    </div>
+    <div class="header-actions">
+      <button id="music-toggle" class="glass-btn icon-btn" title="เปิด/ปิด เสียงเพลง">
+        <span id="music-icon">🎵</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="app-container">
+
+    <!-- 1️⃣ WELCOME SCREEN -->
+    <section id="welcome-screen" class="screen active">
+      <div class="glass-card hero-card">
+        <div class="badge-pill" id="welcome-badge">Special Birthday Protocol Active</div>
+        <h1 class="hero-title" id="welcome-title">Happy Birthday!</h1>
+        <p class="hero-subtitle" id="welcome-subtitle">เว็บของขวัญวันเกิดสุดพิเศษ รังสรรค์ด้วยความรักและโค้ดเพื่อเธอคนเดียว</p>
+
+        <div class="loading-wrapper">
+          <div class="loading-bar-container">
+            <div id="loading-progress" class="loading-bar-fill"></div>
+          </div>
+          <span id="loading-text" class="loading-text">กำลังโหลดความทรงจำพิเศษ... 0%</span>
+        </div>
+
+        <button id="start-btn" class="glow-btn primary-btn disabled" disabled>
+          <span class="btn-icon">💖</span>
+          <span id="start-btn-text">กำลังเตรียมความพร้อม...</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- MAIN APP CONTENT (Hidden initially until start button is clicked) -->
+    <div id="main-content" class="main-content hidden">
+
+      <!-- Navigation Tabs -->
+      <nav class="nav-tabs">
+        <button class="tab-btn active" data-target="section-timeline">
+          <span>📸 เรื่องราวของเรา</span>
+        </button>
+        <button class="tab-btn" data-target="section-quiz">
+          <span>🎮 ควิซทายใจ</span>
+        </button>
+        <button class="tab-btn" data-target="section-gift">
+          <span>🎁 กล่องของขวัญ</span>
+        </button>
+      </nav>
+
+      <!-- 2️⃣ STORY TIMELINE SECTION -->
+      <section id="section-timeline" class="content-section active">
+        <div class="section-header">
+          <span class="section-tag">Memory Lane</span>
+          <h2 class="section-title">เรื่องราวและความทรงจำของเรา ✨</h2>
+          <p class="section-subtitle">กดที่รูปภาพเพื่อขยายดูความทรงจำขนาดใหญ่ได้เลยนะครับ</p>
+        </div>
+
+        <div class="timeline-grid" id="timeline-container">
+          <!-- Timeline Polaroid Cards rendered via JavaScript -->
+        </div>
+      </section>
+
+      <!-- 3️⃣ MEMORY QUIZ SECTION -->
+      <section id="section-quiz" class="content-section">
+        <div class="section-header">
+          <span class="section-tag">Fun Quiz</span>
+          <h2 class="section-title">มินิเกมควิซทายใจ 🎯</h2>
+          <p class="section-subtitle">ลองมาทดสอบความทรงจำกันหน่อย ตอบถูกมีรางวัล!</p>
+        </div>
+
+        <div class="quiz-container glass-card">
+          <div class="quiz-progress-bar">
+            <div id="quiz-progress-fill" class="quiz-fill"></div>
+          </div>
+
+          <div id="quiz-card-wrapper">
+            <!-- Quiz question rendered dynamically -->
+          </div>
+        </div>
+      </section>
+
+      <!-- 4️⃣ SURPRISE GIFT BOX SECTION -->
+      <section id="section-gift" class="content-section">
+        <div class="section-header">
+          <span class="section-tag">Surprise Moment</span>
+          <h2 class="section-title">กล่องของขวัญวันเกิด 🎁</h2>
+          <p class="section-subtitle">แตะที่กล่องของขวัญด้านล่างนี้เพื่อเปิดความประทับใจได้เลย!</p>
+        </div>
+
+        <div class="gift-section-wrapper">
+          <!-- Interactive 3D Gift Box -->
+          <div id="gift-box" class="gift-box-container">
+            <div class="gift-box-lid">
+              <div class="ribbon-bow"></div>
+            </div>
+            <div class="gift-box-body">
+              <div class="ribbon-vertical"></div>
+              <div class="ribbon-horizontal"></div>
+              <div class="gift-sparkles">✨</div>
+            </div>
+          </div>
+
+          <p class="tap-hint">👇 คลิก/แตะที่กล่องเพื่อเปิดของขวัญ! 👇</p>
+        </div>
+
+        <!-- REVEALED GIFT & LETTER CONTAINER (Hidden until box is opened) -->
+        <div id="revealed-gift-container" class="revealed-container hidden">
+          <!-- Heartfelt Love Letter Card -->
+          <div class="glass-card letter-card">
+            <div class="badge-pill" id="letter-badge">Letter from the Heart</div>
+            <h3 class="letter-title" id="letter-title">ถึงคนสำคัญของเค้า 💌</h3>
+            <div class="letter-body" id="letter-body">
+              <!-- Letter content paragraphs rendered dynamically -->
+            </div>
+          </div>
+
+          <!-- Interactive Make a Birthday Wish Card -->
+          <div class="glass-card wish-card" id="wish-card-container">
+            <div class="wish-header">
+              <span class="wish-tag" id="wish-tag">MAKE A WISH</span>
+              <h3 class="wish-title" id="wish-title">MAKE A BIRTHDAY WISH 🌠</h3>
+              <p class="wish-subtitle" id="wish-subtitle">เขียนคำอธิษฐานหรือสิ่งที่อยากได้ในวันเกิดปีนี้ แล้วกดส่งคำขอสู่ฟากฟ้า</p>
+            </div>
+            
+            <div class="wish-body" id="wish-input-wrapper">
+              <div class="wish-input-container">
+                <textarea id="wish-input" class="wish-textarea" rows="3" placeholder="พิมพ์คำอธิษฐานของคุณที่นี่... (เช่น ขอให้ปีนี้ปังๆ ร่ำรวย มีความสุขทุกวัน ✨)"></textarea>
+                <div class="wish-input-glow"></div>
+              </div>
+              <button id="send-wish-btn" class="glow-btn wish-btn">
+                <span class="wish-btn-icon">🚀</span>
+                <span id="send-wish-text">ส่งคำอธิษฐานสู่ดวงดาว ✨</span>
+              </button>
+            </div>
+
+            <!-- Wish Revealed Certificate (Hidden until sent) -->
+            <div id="wish-success-wrapper" class="wish-success-wrapper hidden">
+              <div class="wish-success-icon">🌟✨🌠</div>
+              <h4 class="wish-success-title" id="wish-success-title">คำอธิษฐานถูกส่งสู่ดวงดาวแล้ว!</h4>
+              <div class="wish-display-box">
+                <span class="quote-mark">“</span>
+                <p id="wish-display-text" class="wish-display-text"></p>
+                <span class="quote-mark">”</span>
+              </div>
+              <div class="wish-badge-status">
+                <span class="status-dot"></span>
+                <span>STATUS: TRANSMITTED & GRANTED ✨</span>
+              </div>
+              <p class="wish-success-desc" id="wish-success-desc">Dev ได้รับคำอธิษฐานนี้เรียบร้อยแล้ว ขอให้สมปรารถนาในทุกสิ่งที่หวังนะ!</p>
+              <button id="edit-wish-btn" class="glass-btn text-btn">✏️ เขียนคำอธิษฐานใหม่อีกข้อ</button>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Footer -->
+      <footer class="app-footer">
+        <p id="footer-dev-badge">Crafted with ❤️ & Code by <span id="sender-name-text">Dev</span></p>
+      </footer>
+    </div>
+
+  </main>
+
+  <!-- LIGHTBOX MODAL FOR POLAROID PHOTOS -->
+  <div id="lightbox-modal" class="lightbox-modal hidden">
+    <div class="lightbox-backdrop"></div>
+    <div class="lightbox-content polaroid-lightbox">
+      <button id="lightbox-close" class="lightbox-close-btn" title="ปิด">&times;</button>
+      <div class="lightbox-img-wrapper">
+        <img id="lightbox-img" src="" alt="Memory Photo" />
+      </div>
+      <div class="lightbox-info">
+        <span id="lightbox-date" class="lightbox-date"></span>
+        <h3 id="lightbox-title" class="lightbox-title"></h3>
+        <p id="lightbox-desc" class="lightbox-desc"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Scripts -->
+  <script src="./src/config.js"></script>
+  <script src="./src/main.js"></script>
+</body>
+</html>
